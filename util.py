@@ -19,6 +19,14 @@ def drawMenu(optlist):
     print(' ~ '.join(optlist2))
     print(80*'~')
 
+# cmd = util.prompt('/foo/bar')
+#
+# Display prompt and read command
+# ===============================
+
+def prompt(wfpath):
+    return input('[' + wfpath + ']: ')
+
 # newcontent = util.vimEdit('foobar..')
 #
 # Edit text in vim
