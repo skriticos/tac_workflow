@@ -1,12 +1,6 @@
-# menu.draw(['foo', 'bar', 'xyz'])
-#
-# ~~~~~~~~~~~~~~~~~~~~~~~~
-# [F]OO ~ [B]AR ~ [X]YZ
-# ~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# Draw a menu as shown above.
-
+# draw(['foo', 'bar', 'xyz'])
 def draw(optlist):
+    print()
     print(80*'~')
     optlist2 = []
     for opt in optlist:
@@ -16,12 +10,20 @@ def draw(optlist):
     print(' ~ '.join(optlist2))
     print(80*'~')
 
-# cmd = menu.prompt('/foo/bar')
-#
-# Display prompt and read command
-# ===============================
-
-def prompt(wfpath):
+# cmd = readinput('/foo/bar')
+def readinput(wfpath):
     return input('[' + wfpath + ']: ')
 
+# opt = menu.Prompt(['foo', 'bar', 'xyz'])
+def Prompt(optlist, wfpath):
+    optchars = []
+    for opt in optlist:
+        optchars.append(opt[0])
+    char = None
+    while char not in optchars:
+        draw(optlist)
+        char = readinput(wfpath)
+        if char not in optchars:
+            print('Invalid input! Try again..')
+    return char
 
