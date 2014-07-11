@@ -2,7 +2,7 @@
     The database module contains the classes and functions that are required to
     store and query application data from a SQLite database.
 
-    The variables tblProjectSchema and tblWorfklowSchema contain the schema
+    The variables tblProjectSchema and tblWorkflowSchema contain the schema
     definitions for the two tables that we are using to store data.
 
     db = database.DataBase(
@@ -15,15 +15,16 @@
 import sqlite3
 import os
 import os.path
+import time
+
+SCHEMA_VERSION = 1
 
 tblMetaSchema = [
         ('key', 'TEXT UNIQUE'),
         ('value', 'TEXT')
         ]
 tblMetaCols = [
-        'key',
-        'value'
-        ]
+        'key', 'value' ]
 tblProjectSchema = [
         ('pid', 'INTEGER PRIMARY KEY'),
         ('name', 'TEXT UNIQUE'),
@@ -33,13 +34,7 @@ tblProjectSchema = [
         ('modified', 'INTEGER')
         ]
 tblProjectCols = [
-        'pid',
-        'name',
-        'title',
-        'description',
-        'created',
-        'modified'
-        ]
+        'pid', 'name', 'title', 'description', 'created', 'modified' ]
 tblWorkflowSchema = [
         ('wif', 'INTEGER PRIMARY KEY'),
         ('ppid', 'INTEGER'),
@@ -52,20 +47,14 @@ tblWorkflowSchema = [
         ('modified', 'INTEGER')
         ]
 tblWorfklowCols = [
-        'wif',
-        'ppid',
-        'pwif',
-        'name',
-        'title',
-        'description',
-        'status',
-        'created',
-        'modified'
-        ]
+        'wif', 'ppid', 'pwif', 'name', 'title', 'description', 'status',
+        'created', 'modified' ]
 
 class DataBase():
+# ---------------
 
     def __init__(self, path):
+    # ~~~~~~~~~~~~~~~~~~~~~~~
         """
             Establish a connection to database file. The path argument is the
             full database path. If the path or database file do not exist, they
@@ -81,11 +70,25 @@ class DataBase():
                 os.makedirs(dirname)
         self.connection = sqlite3.connect(path)
         self.cursor = self.connection.cursor()
+        tablenames = self.cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'")
+        if ('tblMeta',) not in tablenames:
+            self.createTable('tblMeta', tblMetaSchema)
+            self.insert('tblMeta', {'key': 'schema_version', 'value': SCHEMA_VERSION})
+            self.createTable('tblProject', tblProjectSchema)
+            self.createTable('tblWorkflow', tblWorkflowSchema)
+        else:
+            schemaversion = self.cursor.execute(
+                    "SELECT 1 FROM tblMeta WHERE key=?", ('schema_version',))
+            schemaversion = schemaversion.fetchone()[0]
+            if schemaversion != SCHEMA_VERSION:
+                raise Exception('Trying to open database with old schema!')
 
-    def createTable(self, name, schema):
+    def createTable(self, tablename, schema):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             We define table schemas with a list that contains two member tuples
-            for column name. See the declarations at the beginning of this file.
+            for column tablename. See the declarations at the beginning of this file.
 
             in: createTable('tblFoo', [('foo', 'INTEGER'), ('bar', 'TEXT')])
             sql: CREATE TABLE tblFoo (foo INTEGER, bar TEXT)
@@ -94,8 +97,43 @@ class DataBase():
         for col in schema:
             sql1.append(' '.join(col))
         query = 'CREATE TABLE {tblName} ({schema})'.format(
-                tblName=name, schema=', '.join(sql1))
+                tblName=tablename, schema=', '.join(sql1))
         self.cursor.execute(query)
         self.connection.commit()
+
+    def insert(self, tablename, data):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Generic insert method for database tables.
+
+            in: 'tblFoo', {'col1': 'val1', 'col2': 'val2'}
+        """
+        cols = []
+        values = []
+        for col, val in data.items():
+            cols.append(col)
+            values.append(val)
+        query = "INSERT INTO {tblName} ({columns}) VALUES ({questionmarks})"
+        query = query.format(
+                tblName=tablename,
+                columns=', '.join(cols),
+                questionmarks=', '.join(len(values)*'?'))
+        self.cursor.execute(query, tuple(values))
+        self.connection.commit()
+
+    def addProject(self, name, title, description):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Insert a new project entry into the tblProject table.
+        """
+        timestamp = int(time.time())
+        self.insert('tblProject', {
+            'name': name,
+            'title': title,
+            'description': description,
+            'created': timestamp,
+            'modified': timestamp
+            })
+        return self.cursor.lastrowid
 
 
