@@ -21,21 +21,43 @@ class menuitems:
     workflowEdit = [
         'name', 'title', 'description', 'status', 'back', 'help']
 
-# setup database
-db = database.DataBase(os.path.join(
-        os.path.expanduser('~'), '.local', 'share', 'tac', 'tac.db'))
+def setupDatabase():
+# ~~~~~~~~~~~~~~~~~~
+    """
+        Establish connection with the database file
+    """
+    return database.DataBase(os.path.join(
+            os.path.expanduser('~'), '.local', 'share', 'tac', 'tac.db'))
 
-# main menu loop
-char = None
-pid = -1   # currently selected project id
-wif = -1   # currently selected workflow id
-while char != 'Q':
-    char = menu.Prompt(menuitems.root, '/')
-    if char == 'H':
-        hlp.RootHelp()
-    if char == 'C':
-        pid = project.Create(db)
-    if char == 'L':
-        project.List(db)
+def mainMenu(db):
+# ~~~~~~~~~
+    """
+        Start main menu loop.
+    """
+    char = None
+    while char != 'Q':
+        char = menu.Prompt(menuitems.root, '/')
+        if char == 'H':
+            hlp.RootHelp()
+        if char == 'C':
+            pid = project.Create(db)
+        if char == 'L':
+            project.List(db)
+        if char == 'S':
+            pid = project.Select(db)
+            if pid:
+                projectMenu(db, pid)
 
+def projectMenu(db, pid):
+# ~~~~~~~~~~~~~~~~~~
+    """
+        Start project menu loop.
+    """
+    projectName = db.getConditionalRow(
+            'tblProject', ['name'], {'pid': pid})['name']
+    char = None
+    while char != 'B':
+        char = menu.Prompt(menuitems.project, '/' + projectName)
+
+mainMenu(setupDatabase())
 

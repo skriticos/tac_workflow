@@ -4,6 +4,7 @@
 
 import re
 import util
+import menu
 
 identRegex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
 
@@ -44,4 +45,22 @@ def List(db):
     for project in db.getAllRows('tblProject', ['pid', 'name', 'title']):
         print('    {}: {} - {}'.format(
             project['pid'], project['name'], project['title']))
+
+def Select(db):
+# ~~~~~~~~~~~~~
+    """
+        List all projects and ask the user to select one (by id).
+    """
+    if db.getRowCount('tblProject') == 0:
+        print('No projects existent! Aborting select..')
+        return None
+    print()
+    print('Selecting a project..')
+    List(db)
+    pid = menu.PromptProjectId(db)
+    return pid
+
+
+
+
 

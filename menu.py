@@ -57,3 +57,21 @@ def Prompt(optlist, wfpath):
             print('Invalid input! Try again..')
     return char
 
+def PromptProjectId(db):
+# ~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Prompt the user to select a project id.
+    """
+    validIds = set()
+    for row in db.getAllRows('tblProject', ['pid']):
+        validIds.add(row['pid'])
+    choice = None
+    while choice not in validIds:
+        try:
+            choice = int(input('Enter the Project ID: '))
+        except ValueError:
+            print('    Project id must be an integer!')
+        if choice not in validIds:
+            print('    Invalid id. Enter a valid id')
+    return choice
+

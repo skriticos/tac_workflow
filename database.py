@@ -121,6 +121,14 @@ class DataBase():
         self.cursor.execute(query, tuple(values))
         self.connection.commit()
 
+    def getRowCount(self, tablename):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Get the number of rows in a specific table.
+        """
+        query = "SELECT Count(*) FROM {}".format(tablename)
+        return self.cursor.execute(query).fetchone()[0]
+
     def getAllRows(self, tablename, columns):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
@@ -137,6 +145,27 @@ class DataBase():
             for i, col in enumerate(columns):
                 outrec[col] = rec[i]
             out.append(outrec)
+        return out
+
+    def getConditionalRow(self, tablename, columns, condition):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Simply said, this is a generalization of
+            "SELECT {cols} FROM {tbl} WHERE col=val"
+            There can be one or more columns specified and one condition.
+
+            in: getConditionalRow('tblProject', ['name'], {'pid': 1})
+            out: {'name': 'foo'}
+        """
+        query = "SELECT {} FROM {} WHERE {}=?"
+        query = query.format(
+                ', '.join(columns), tablename, list(condition.keys())[0])
+        records = self.cursor.execute(query, (list(condition.values())[0],))
+        records = records.fetchall()
+        out = {}
+        for rec in records:
+            for i, col in enumerate(columns):
+                out[col] = rec[i]
         return out
 
     def addProject(self, name, title, description):
