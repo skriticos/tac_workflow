@@ -34,3 +34,14 @@ def Create(db):
     pid = db.addProject(name, title, description)
     return pid
 
+def List(db):
+# ~~~~~~~~~~~
+    """
+        List existing project names and titles.
+    """
+    print()
+    print('List of Projects:')
+    for project in db.getAllRows('tblProject', ['pid', 'name', 'title']):
+        print('    {}: {} - {}'.format(
+            project['pid'], project['name'], project['title']))
+

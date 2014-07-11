@@ -121,6 +121,24 @@ class DataBase():
         self.cursor.execute(query, tuple(values))
         self.connection.commit()
 
+    def getAllRows(self, tablename, columns):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Generic select method. Return a list of columns for all records.
+
+            in: 'tblFoo', ['foo', 'bar']
+            out: [{'foo': 'fooval1', 'bar': 'barval1'}, {..}]
+        """
+        query = "SELECT {} FROM {}".format(', '.join(columns), tablename)
+        records = self.cursor.execute(query).fetchall()
+        out = []
+        for rec in records:
+            outrec = {}
+            for i, col in enumerate(columns):
+                outrec[col] = rec[i]
+            out.append(outrec)
+        return out
+
     def addProject(self, name, title, description):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
@@ -135,5 +153,7 @@ class DataBase():
             'modified': timestamp
             })
         return self.cursor.lastrowid
+
+
 
 

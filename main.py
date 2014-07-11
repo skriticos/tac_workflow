@@ -35,4 +35,7 @@ while char != 'Q':
         hlp.RootHelp()
     if char == 'C':
         pid = project.Create(db)
+    if char == 'L':
+        project.List(db)
+
 
