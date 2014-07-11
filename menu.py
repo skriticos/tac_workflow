@@ -1,5 +1,21 @@
-# draw(['foo', 'bar', 'xyz'])
+"""
+    Utility functions that are used to compose the navigation menu and query the
+    user for navigation commands via a prompt.
+"""
+
 def draw(optlist):
+# ~~~~~~~~~~~~~~~~
+    """
+        Take a list of menu options, puts the first characters in between
+        brackets to indicate that these are the command keys for this option and
+        output menu to the console sandwiched in two horizontal lines.
+
+        in: ['foo', 'bar']
+        out (terminal):
+            ~~~~~~~~~~~~~~~~~~~
+            [F]OO ~ [B]AR
+            ~~~~~~~~~~~~~~~~~~~
+    """
     print()
     print(80*'~')
     optlist2 = []
@@ -10,12 +26,26 @@ def draw(optlist):
     print(' ~ '.join(optlist2))
     print(80*'~')
 
-# cmd = readinput('/foo/bar')
 def readinput(wfpath):
+# ~~~~~~~~~~~~~~~~~~~~
+    """
+        Take a path, draw it surrounded with barkets and read user input.
+
+        in: '/foo/bar', user input (terminal)
+        out (terminal): '[/foo/bar]: '
+        out: (user input)
+    """
     return input('[' + wfpath + ']: ')
 
-# opt = menu.Prompt(['foo', 'bar', 'xyz'])
 def Prompt(optlist, wfpath):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Takes an option list of strings and a path. Compiles a list of valid
+        options. Draws a menu and queries user input until valid.
+
+        in: ['foo', 'bar'], '/a/b/c'
+        out: [f|b]
+    """
     optchars = []
     for opt in optlist:
         optchars.append(opt[0].upper())
