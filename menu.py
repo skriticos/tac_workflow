@@ -18,11 +18,11 @@ def readinput(wfpath):
 def Prompt(optlist, wfpath):
     optchars = []
     for opt in optlist:
-        optchars.append(opt[0])
+        optchars.append(opt[0].upper())
     char = None
     while char not in optchars:
         draw(optlist)
-        char = readinput(wfpath)
+        char = readinput(wfpath)[0].upper()
         if char not in optchars:
             print('Invalid input! Try again..')
     return char
