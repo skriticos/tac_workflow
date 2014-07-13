@@ -39,18 +39,18 @@ def mainMenu(db):
     char = None
     while char != 'Q':
         char = prompt.Prompt(menuitems.root, '/')
-        if char == 'H':
-            hlp.RootHelp()
-        if char == 'C':
-            pid = project.Create(db)
-        if char == 'L':
-            project.List(db)
         if char == 'S':
             pid = project.Select(db)
             if pid:
                 projectMenu(db, pid)
+        if char == 'L':
+            project.List(db)
         if char == 'T':
             pass # tree
+        if char == 'C':
+            pid = project.Create(db)
+        if char == 'H':
+            hlp.RootHelp()
 
 def projectMenu(db, pid):
 # ~~~~~~~~~~~~~~~~~~
