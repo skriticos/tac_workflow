@@ -49,6 +49,8 @@ def mainMenu(db):
             pid = project.Select(db)
             if pid:
                 projectMenu(db, pid)
+        if char == 'T':
+            pass # tree
 
 def projectMenu(db, pid):
 # ~~~~~~~~~~~~~~~~~~
@@ -60,6 +62,22 @@ def projectMenu(db, pid):
     char = None
     while char != 'B':
         char = prompt.Prompt(menuitems.project, '/' + projectName)
+        if char == 'S':
+            pass # select
+        if char == 'I':
+            pass # info
+        if char == 'L':
+            pass # list
+        if char == 'T':
+            pass # tree
+        if char == 'E':
+            pass # edit
+        if char == 'C':
+            pass # create
+        if char == 'H':
+            hlp.ProjectHelp()
+
+
 
 mainMenu(setupDatabase())
 

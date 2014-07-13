@@ -16,3 +16,18 @@ def RootHelp():
     print('HELP:   show this help')
     print()
 
+def ProjectHelp():
+# ~~~~~~~~~~~~~~~~
+    """
+        Show help for project menu.
+    """
+    print()
+    print('BACK:   back to root menu')
+    print('SELECT: select workflow')
+    print('INFO:   show project info')
+    print('LIST:   list workflows')
+    print('TREE:   list workflows recursively')
+    print('EDIT:   edit project name, title or description')
+    print('CREATE: create a new root-workflow')
+    print('HELP:   show this help')
+    print()
