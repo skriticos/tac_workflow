@@ -13,7 +13,7 @@ import database
 
 class menuitems:
     root = [
-        'quit', 'select', 'list', 'tree', 'create', 'help']
+        'quit', 'select', 'list', 'tree', 'create', 'delete', 'help']
     project = [
         'back', 'select', 'info', 'list', 'tree', 'edit', 'create', 'help']
     projectEdit = [
@@ -50,6 +50,8 @@ def mainMenu(db):
         if char == 'C':
             pid = project.Create(db)
             projectMenu(db, pid)
+        if char == 'D':
+            pass # delete a project and all of it's workflows
         if char == 'H':
             hlp.RootHelp()
 
