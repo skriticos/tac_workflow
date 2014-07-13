@@ -16,4 +16,5 @@ applied. 50, 72, expressive.
 - [cosmetic] - cosmetic changes that don't affect functionality
 - [doc] - documentation
 - [meta] - change to the revision control, styleguide, etc.
+- [placeholder] - structural stub for later implementation
 
