@@ -17,7 +17,7 @@ class menuitems:
     project = [
         'back', 'select', 'info', 'list', 'tree', 'edit', 'create', 'help']
     projectEdit = [
-        'name', 'title', 'description', 'back', 'help']
+        'back', 'name', 'title', 'description', 'help']
     workflow = [
         'main', 'back', 'select', 'info', 'list', 'tree', 'edit', 'create', 'h' ]
     workflowEdit = [
@@ -80,7 +80,22 @@ def projectMenu(db, pid):
         if char == 'H':
             hlp.ProjectHelp()
 
-
+def projectEditMenu(db, pid, projectName):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Show project edit menu and prompt.
+    """
+    char = None
+    while char != 'B':
+        char = prompt.Prompt(menuitems.projectEdit, '/' + projectName)
+        if char == 'N':
+            pass # edit name
+        if char == 'T':
+            pass # edit title
+        if char == 'D':
+            pass # edit description
+        if char == 'H':
+            pass # project edit help
 
 mainMenu(setupDatabase())
 
