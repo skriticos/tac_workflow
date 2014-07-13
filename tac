@@ -49,6 +49,7 @@ def mainMenu(db):
             pass # tree
         if char == 'C':
             pid = project.Create(db)
+            projectMenu(db, pid)
         if char == 'H':
             hlp.RootHelp()
 
