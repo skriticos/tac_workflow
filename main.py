@@ -1,10 +1,12 @@
+#! /usr/bin/env python3
+
 """
     Main module. Contains the navigation menu and connects the other modules.
 """
 
 import os.path
 import util
-import menu
+import prompt
 import project
 import hlp
 import database
@@ -36,7 +38,7 @@ def mainMenu(db):
     """
     char = None
     while char != 'Q':
-        char = menu.Prompt(menuitems.root, '/')
+        char = prompt.Prompt(menuitems.root, '/')
         if char == 'H':
             hlp.RootHelp()
         if char == 'C':
@@ -57,7 +59,7 @@ def projectMenu(db, pid):
             'tblProject', ['name'], {'pid': pid})['name']
     char = None
     while char != 'B':
-        char = menu.Prompt(menuitems.project, '/' + projectName)
+        char = prompt.Prompt(menuitems.project, '/' + projectName)
 
 mainMenu(setupDatabase())
 

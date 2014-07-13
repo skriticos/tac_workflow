@@ -1,15 +1,16 @@
+"""
+    Utility functions for editing, display, etc.
+"""
+
 import tempfile
 import subprocess
 
-# newcontent = util.vimEdit('foobar..')
-#
-# Edit text in vim
-# ================
-#
-# Create a temporary file, write content into it, run a subprocess with vim and
-# the file and read back the changed content.
-
 def vimEdit(content=''):
+# ~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Create a temporary file, write content into it, run a subprocess with
+        vim and the file and read back the changed content.
+    """
     tmpfp = tempfile.NamedTemporaryFile()
     tmpfilename = tmpfp.name
     if content:

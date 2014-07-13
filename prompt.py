@@ -1,6 +1,5 @@
 """
-    Utility functions that are used to compose the navigation menu and query the
-    user for navigation commands via a prompt.
+    User input prompts in the navigation.
 """
 
 def draw(optlist):
@@ -74,4 +73,5 @@ def PromptProjectId(db):
         if choice not in validIds:
             print('    Invalid id. Enter a valid id')
     return choice
+
 

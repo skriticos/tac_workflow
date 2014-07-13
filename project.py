@@ -4,7 +4,7 @@
 
 import re
 import util
-import menu
+import prompt
 
 identRegex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
 
@@ -57,7 +57,7 @@ def Select(db):
     print()
     print('Selecting a project..')
     List(db)
-    pid = menu.PromptProjectId(db)
+    pid = prompt.PromptProjectId(db)
     return pid
 
 
