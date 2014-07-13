@@ -3,6 +3,7 @@
 """
 
 import re
+import textwrap
 import util
 import prompt
 
@@ -60,7 +61,16 @@ def Select(db):
     pid = prompt.PromptProjectId(db)
     return pid
 
-
-
-
+def Info(db, pid):
+# ~~~~~~~~~~~~~~~~
+    """
+        Print project name, title and description.
+    """
+    record = db.getConditionalRow('tblProject',
+            ['name', 'title', 'description'], {'pid': pid})
+    print()
+    print('Project Name:', record['name'])
+    print('Project Title:', record['title'])
+    print('Project Description:')
+    print(textwrap.indent(record['description'], 4*' '))
 

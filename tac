@@ -65,7 +65,7 @@ def projectMenu(db, pid):
         if char == 'S':
             pass # select
         if char == 'I':
-            pass # info
+            project.Info(db, pid)
         if char == 'L':
             pass # list
         if char == 'T':
