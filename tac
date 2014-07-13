@@ -89,7 +89,7 @@ def projectEditMenu(db, pid, projectName):
     while char != 'B':
         char = prompt.Prompt(menuitems.projectEdit, '/' + projectName)
         if char == 'N':
-            pass # edit name
+            project.EditName(db, pid, projectName)
         if char == 'T':
             pass # edit title
         if char == 'D':

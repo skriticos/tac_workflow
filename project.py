@@ -9,6 +9,28 @@ import prompt
 
 identRegex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
 
+def readName(currentName=''):
+# ~~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Read project name and validate it
+
+        If currentName is provided, it is printed. Then it reads the project
+        name from the user. Checks the project name and loops until it's valid.
+    """
+    if currentName:
+        print('Current name:', currentName)
+    nameOk = False
+    while not nameOk:
+        name = input('Project new name: ')
+        if identRegex.match(name):
+            nameOk = True
+        else:
+            print('    Invalid name!')
+            print('    Only letters, numbers and underscores are allowed.')
+            print('    First character must not be a number.')
+            print('    Max. 16 charaterss.')
+    return name
+
 def Create(db):
 # ~~~~~~~~~~~~~
     """
@@ -21,20 +43,21 @@ def Create(db):
         out: pid - project id in database
     """
     print('Creating new project..')
-    nameOk = False
-    while not nameOk:
-        name = input('Project name: ')
-        if identRegex.match(name):
-            nameOk = True
-        else:
-            print('    Invalid name!')
-            print('    Only letters, numbers and underscores are allowed.')
-            print('    First character must not be a number.')
-            print('    Max. 16 charaterss.')
+    name = readName()
     title = input('Project title: ')
     description = util.vimEdit()
     pid = db.addProject(name, title, description)
     return pid
+
+def EditName(db, pid, projectName):
+# ~~~~~~~~~~~~~~~~~~~~
+    """
+        Edit project name
+    """
+    print('Editing project name..')
+    newname = readName(projectName)
+    db.updateRow('tblProject', {'name': newname}, {'pid': pid})
+
 
 def List(db):
 # ~~~~~~~~~~~

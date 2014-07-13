@@ -168,6 +168,32 @@ class DataBase():
                 out[col] = rec[i]
         return out
 
+    def updateRow(self, tablename, data, conditions):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Update a single record in a database table
+
+            Example:
+            updateRow('tblProject', {'name': newname}, {'pid': pid})
+        """
+        query = "UPDATE {tblName} SET {dataQuery} WHERE {whereQuery}"
+        newQuery = []
+        newValues = []
+        for key, value in data.items():
+            newQuery.append('{}=?'.format(key))
+            newValues.append(value)
+        condQuery = []
+        condValues = []
+        for key, value in conditions.items():
+            condQuery.append('{}=?'.format(key))
+            condValues.append(value)
+        query = query.format(
+                tblName = tablename,
+                dataQuery = ', '.join(newQuery),
+                whereQuery = 'AND '.join(condQuery))
+        self.cursor.execute(query, tuple(newValues + condValues))
+        self.connection.commit()
+
     def addProject(self, name, title, description):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
