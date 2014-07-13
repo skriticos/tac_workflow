@@ -31,3 +31,17 @@ def ProjectHelp():
     print('CREATE: create a new root-workflow')
     print('HELP:   show this help')
     print()
+
+def ProjectEditHelp():
+# ~~~~~~~~~~~~~~~~~~~~
+    """
+        Show help for edit project menu.
+    """
+    print()
+    print('BACK:        back to project menu')
+    print('NAME:        edit project name')
+    print('TITLE:       edit project title')
+    print('DESCRIPTION: edit project description')
+    print('HELP:        show this help')
+    print()
+

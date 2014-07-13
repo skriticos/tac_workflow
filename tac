@@ -95,7 +95,7 @@ def projectEditMenu(db, pid, projectName):
         if char == 'D':
             pass # edit description
         if char == 'H':
-            pass # project edit help
+            hlp.ProjectEditHelp()
 
 mainMenu(setupDatabase())
 
