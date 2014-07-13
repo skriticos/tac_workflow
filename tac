@@ -71,7 +71,7 @@ def projectMenu(db, pid):
         if char == 'T':
             pass # tree
         if char == 'E':
-            pass # edit
+            projectEditMenu(db, pid, projectName)
         if char == 'C':
             pass # create
         if char == 'H':
