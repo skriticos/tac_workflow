@@ -10,7 +10,7 @@ import prompt
 identRegex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
 
 def readName(currentName=''):
-# ~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
     """
         Read workflow name and validate it
 
@@ -32,7 +32,7 @@ def readName(currentName=''):
     return name
 
 def Create(db, pid):
-# ~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~
     """
         Create a new workflow. Prompt the user for name and title, let the user
         edit the description in an external editor and send the changes to the
