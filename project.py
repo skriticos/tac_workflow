@@ -107,6 +107,22 @@ def Select(db):
     pid = prompt.PromptProjectId(db)
     return pid
 
+def Delete(db):
+# ~~~~~~~~~~~~~
+    """
+        Delete a project
+
+        Show the user a list of projects, prompt for an ID and delete it.
+    """
+    if db.getRowCount('tblProject') == 0:
+        print('No projects existent! Aborting select..')
+        return None
+    print()
+    print('Deleting a project..')
+    List(db)
+    pid = prompt.PromptProjectId(db)
+    db.deleteProject(pid)
+
 def Info(db, pid):
 # ~~~~~~~~~~~~~~~~
     """

@@ -227,6 +227,12 @@ class DataBase():
             })
         return self.cursor.lastrowid
 
+    def deleteProject(self, pid):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        query = 'DELETE FROM tblProject WHERE pid=?'
+        self.cursor.execute(query, (pid,))
+        self.connection.commit()
+
     def addRootWorkflow(self, pid, name, title, description):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """

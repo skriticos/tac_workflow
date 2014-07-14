@@ -52,7 +52,7 @@ def mainMenu(db):
             pid = project.Create(db)
             projectMenu(db, pid)
         if char == 'D':
-            pass # delete a project and all of it's workflows
+            project.Delete(db)
         if char == 'H':
             hlp.RootHelp()
 
