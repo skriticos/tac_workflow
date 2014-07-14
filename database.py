@@ -168,6 +168,24 @@ class DataBase():
                 out[col] = rec[i]
         return out
 
+    def getConditionalRows(self, tablename, columns, condition):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Like getConditionalRow, just for multiple rows
+        """
+        query = "SELECT {} FROM {} WHERE {}=?"
+        query = query.format(
+                ', '.join(columns), tablename, list(condition.keys())[0])
+        records = self.cursor.execute(query, (list(condition.values())[0],))
+        records = records.fetchall()
+        result = []
+        for record in records:
+            recdir = {}
+            for i, column in enumerate(columns):
+                recdir[column] = record[i]
+            result.append(recdir)
+        return result
+
     def updateRow(self, tablename, data, conditions):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """

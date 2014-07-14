@@ -71,6 +71,7 @@ def projectMenu(db, pid):
         if char == 'I':
             project.Info(db, pid)
         if char == 'L':
+            workflow.ListRoot(db, pid)
             pass # list
         if char == 'T':
             pass # tree

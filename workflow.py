@@ -49,3 +49,18 @@ def Create(db, pid):
     pid = db.addRootWorkflow(pid, name, title, description)
     return pid
 
+def ListRoot(db, pid):
+# ~~~~~~~~~~~~~~~~~~~~
+    """
+        List the ids, names and titles of all root-workflows
+    """
+    print()
+    print('List of Root-Workflows:')
+    workflows = db.getConditionalRows(
+            'tblWorkflow',
+            ['wif', 'name', 'title'],
+            {'ppid': pid, 'pwif': -1})
+    for wf in workflows:
+        print('    {wif}: {name} - {title}'.format(**wf))
+
+
