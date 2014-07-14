@@ -4,6 +4,7 @@
 
 import re
 import textwrap
+import time
 import util
 import prompt
 
@@ -75,4 +76,19 @@ def SelectRoot(db, pid):
     ListRoot(db, pid)
     pid = prompt.PromptRootWorkflowId(db, pid)
     return pid
+
+def Info(db, wif):
+# ~~~~~~~~~~~~~~~~
+    record = db.getConditionalRow('tblWorkflow',
+            ['name', 'title', 'description', 'status', 'created', 'modified'],
+            {'wif': wif})
+    print()
+    print('Workflow ID:      ', wif)
+    print('Workflow Name:    ', record['name'])
+    print('Workflow Title:   ', record['title'])
+    print('Workflow Status:  ', record['status'])
+    print('Workflow Created: ', time.ctime(record['created']))
+    print('Workflow Modified:', time.ctime(record['modified']))
+    print('Workflow Description:')
+    print(textwrap.indent(record['description'], 4*' '))
 

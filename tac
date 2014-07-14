@@ -114,7 +114,7 @@ def workflowMenu(db, wif, parentPath):
         if char == 'S':
             pass # select sub-workflow
         if char == 'I':
-            pass # show workflow info
+            workflow.Info(db, wif)
         if char == 'L':
             pass # list sub-workflows
         if char == 'T':
