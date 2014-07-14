@@ -79,7 +79,7 @@ def PromptRootWorkflowId(db, pid):
     validIds = set()
     for row in db.getConditionalRows(
             'tblWorkflow',
-            ['wif'], {'pid': pid, 'pwif': -1}):
+            ['wif'], {'ppid': pid, 'pwif': -1}):
         validIds.add(row['wif'])
     choice = None
     while choice not in validIds:
