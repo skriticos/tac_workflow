@@ -221,7 +221,7 @@ class DataBase():
         query = query.format(
                 tblName = tablename,
                 dataQuery = ', '.join(newQuery),
-                whereQuery = 'AND '.join(condQuery))
+                whereQuery = ' AND '.join(condQuery))
         self.cursor.execute(query, tuple(newValues + condValues))
         self.connection.commit()
 

@@ -115,7 +115,7 @@ def Delete(db):
         Show the user a list of projects, prompt for an ID and delete it.
     """
     if db.getRowCount('tblProject') == 0:
-        print('No projects existent! Aborting select..')
+        print('No projects existent! Aborting delete..')
         return None
     print()
     print('Deleting a project..')
