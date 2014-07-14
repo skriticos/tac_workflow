@@ -93,7 +93,7 @@ def projectEditMenu(db, pid, projectName):
         if char == 'T':
             project.EditTitle(db, pid)
         if char == 'D':
-            pass # edit description
+            project.EditDescription(db, pid)
         if char == 'H':
             hlp.ProjectEditHelp()
 

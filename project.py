@@ -70,6 +70,18 @@ def EditTitle(db, pid):
     newtitle = input('Enter new title: ')
     db.updateRow('tblProject', {'title': newtitle}, {'pid': pid})
 
+def EditDescription(db, pid):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    """
+        Edit project description
+    """
+    print('Editing project description..')
+    olddescription = db.getConditionalRow(
+            'tblProject', ['description'], {'pid': pid})
+    olddescription = olddescription['description']
+    newdescription = util.vimEdit(olddescription)
+    db.updateRow('tblProject', {'description': newdescription}, {'pid': pid})
+
 def List(db):
 # ~~~~~~~~~~~
     """
