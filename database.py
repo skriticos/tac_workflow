@@ -245,8 +245,5 @@ class DataBase():
             'created': timestamp,
             'modified': timestamp
             })
-
-        print(self.cursor.execute("SELECT * FROM tblWorkflow").fetchall())
-
         return self.cursor.lastrowid
 
