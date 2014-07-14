@@ -5,6 +5,7 @@
 """
 
 import os.path
+import sys
 import util
 import prompt
 import project
@@ -20,7 +21,7 @@ class menuitems:
     projectEdit = [
         'back', 'name', 'title', 'description', 'help']
     workflow = [
-        'main', 'back', 'select', 'info', 'list', 'tree', 'edit', 'create', 'h' ]
+        'm', 'b', 'q', 's', 'info', 'list', 'tree', 'edit', 'create', 'd', 'h' ]
     workflowEdit = [
         'name', 'title', 'description', 'status', 'back', 'help']
 
@@ -110,6 +111,8 @@ def workflowMenu(db, wif, parentPath):
                 menuitems.workflow, parentPath + '/' + workflowName)
         if char == 'M':
             pass # back to main menu
+        if char == 'Q':
+            sys.exit(0)
         if char == 'S':
             pass # select sub-workflow
         if char == 'I':
@@ -122,8 +125,10 @@ def workflowMenu(db, wif, parentPath):
             pass # show workflow edit menu
         if char == 'C':
             pass # create a new sub-workflow
+        if char == 'D':
+            pass # delete sub-workflow
         if char == 'H':
-            pass # show workflow menu help
+            hlp.WorkflowHelp()
 
 mainMenu(setupDatabase())
 

@@ -45,3 +45,19 @@ def ProjectEditHelp():
     print('HELP:        show this help')
     print()
 
+def WorkflowHelp():
+# ~~~~~~~~~~~~~~~~~
+    print()
+    print('M:      back to main menu')
+    print('B:      one level up')
+    print('Q:      quit application')
+    print('S:      select a sub-workflow')
+    print('INFO:   show workflow details')
+    print('LIST:   list sub-workflows')
+    print('TREE:   list sub-workflows recursively')
+    print('EDIT:   edit workflow')
+    print('CREATE: create a sub-workflow')
+    print('D:      delete sub-workflow')
+    print('H:      show this help')
+    print()
+
