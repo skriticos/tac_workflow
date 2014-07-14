@@ -8,6 +8,7 @@ import os.path
 import util
 import prompt
 import project
+import workflow
 import hlp
 import database
 
@@ -76,7 +77,7 @@ def projectMenu(db, pid):
         if char == 'E':
             projectEditMenu(db, pid, projectName)
         if char == 'C':
-            pass # create
+            workflow.Create(db, pid)
         if char == 'H':
             hlp.ProjectHelp()
 

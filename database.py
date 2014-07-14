@@ -209,6 +209,26 @@ class DataBase():
             })
         return self.cursor.lastrowid
 
+    def addRootWorkflow(self, pid, name, title, description):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        """
+            Insert a new root workflow into the tblWorkflow table
 
+            Parent workflow is -1
+        """
+        timestamp = int(time.time())
+        self.insert('tblWorkflow', {
+            'ppid': pid,
+            'pwif': -1,
+            'name': name,
+            'title': title,
+            'description': description,
+            'status': 'Open',
+            'created': timestamp,
+            'modified': timestamp
+            })
 
+        print(self.cursor.execute("SELECT * FROM tblWorkflow").fetchall())
+
+        return self.cursor.lastrowid
 
