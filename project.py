@@ -58,6 +58,17 @@ def EditName(db, pid, projectName):
     newname = readName(projectName)
     db.updateRow('tblProject', {'name': newname}, {'pid': pid})
 
+def EditTitle(db, pid):
+# ~~~~~~~~~~~~~~~~~~~~~
+    """
+        Edit project title
+    """
+    print('Editing project title..')
+    oldtitle = db.getConditionalRow('tblProject', ['title'], {'pid': pid})
+    oldtitle = oldtitle['title']
+    print('Current title: ', oldtitle)
+    newtitle = input('Enter new title: ')
+    db.updateRow('tblProject', {'title': newtitle}, {'pid': pid})
 
 def List(db):
 # ~~~~~~~~~~~
