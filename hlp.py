@@ -48,7 +48,6 @@ def ProjectEditHelp():
 def WorkflowHelp():
 # ~~~~~~~~~~~~~~~~~
     print()
-    print('M:      back to main menu')
     print('B:      one level up')
     print('Q:      quit application')
     print('S:      select a sub-workflow')

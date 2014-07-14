@@ -21,7 +21,7 @@ class menuitems:
     projectEdit = [
         'back', 'name', 'title', 'description', 'help']
     workflow = [
-        'm', 'b', 'q', 's', 'info', 'list', 'tree', 'edit', 'create', 'd', 'h' ]
+        'b', 'q', 's', 'info', 'list', 'tree', 'edit', 'create', 'd', 'h' ]
     workflowEdit = [
         'name', 'title', 'description', 'status', 'back', 'help']
 
@@ -109,8 +109,6 @@ def workflowMenu(db, wif, parentPath):
     while char != 'B':
         char = prompt.Prompt(
                 menuitems.workflow, parentPath + '/' + workflowName)
-        if char == 'M':
-            pass # back to main menu
         if char == 'Q':
             sys.exit(0)
         if char == 'S':
