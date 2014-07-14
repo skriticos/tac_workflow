@@ -160,12 +160,12 @@ class DataBase():
         query = "SELECT {} FROM {} WHERE {}=?"
         query = query.format(
                 ', '.join(columns), tablename, list(condition.keys())[0])
-        records = self.cursor.execute(query, (list(condition.values())[0],))
-        records = records.fetchall()
+        record = self.cursor.execute(query, (list(condition.values())[0],))
+        record = record.fetchone()
+
         out = {}
-        for rec in records:
-            for i, col in enumerate(columns):
-                out[col] = rec[i]
+        for i, col in enumerate(columns):
+            out[col] = record[i]
         return out
 
     def getConditionalRows(self, tablename, columns, condition):
