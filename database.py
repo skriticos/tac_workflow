@@ -129,6 +129,19 @@ class DataBase():
         query = "SELECT Count(*) FROM {}".format(tablename)
         return self.cursor.execute(query).fetchone()[0]
 
+    def getConditionalRowCount(self, tablename, conditions):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        query = "SELECT Count(*) FROM {} WHERE {}"
+        condpart = []
+        condval = []
+        for key, value in conditions.items():
+            condpart.append('{}=?'.format(key))
+            condval.append(value)
+        query = query.format(tablename, ' AND '.join(condpart))
+        count = self.cursor.execute(query, tuple(condval))
+        count = count.fetchone()[0]
+        return count
+
     def getAllRows(self, tablename, columns):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """

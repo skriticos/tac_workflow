@@ -67,7 +67,9 @@ def projectMenu(db, pid):
     while char != 'B':
         char = prompt.Prompt(menuitems.project, '/' + projectName)
         if char == 'S':
-            pass # select
+            wif = workflow.SelectRoot(db, pid)
+            if wif:
+                workflowMenu(db, wif, '/' + projectName)
         if char == 'I':
             project.Info(db, pid)
         if char == 'L':
@@ -97,6 +99,31 @@ def projectEditMenu(db, pid, projectName):
             project.EditDescription(db, pid)
         if char == 'H':
             hlp.ProjectEditHelp()
+
+def workflowMenu(db, wif, parentPath):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    workflowName = db.getConditionalRow(
+            'tblWorkflow', ['name'], {'wif': wif})['name']
+    char = None
+    while char != 'B':
+        char = prompt.Prompt(
+                menuitems.workflow, parentPath + '/' + workflowName)
+        if char == 'M':
+            pass # back to main menu
+        if char == 'S':
+            pass # select sub-workflow
+        if char == 'I':
+            pass # show workflow info
+        if char == 'L':
+            pass # list sub-workflows
+        if char == 'T':
+            pass # show sub-workflow tree
+        if char == 'E':
+            pass # show workflow edit menu
+        if char == 'C':
+            pass # create a new sub-workflow
+        if char == 'H':
+            pass # show workflow menu help
 
 mainMenu(setupDatabase())
 

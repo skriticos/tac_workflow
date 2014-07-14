@@ -74,4 +74,20 @@ def PromptProjectId(db):
             print('    Invalid id. Enter a valid id')
     return choice
 
+def PromptRootWorkflowId(db, pid):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    validIds = set()
+    for row in db.getConditionalRows(
+            'tblWorkflow',
+            ['wif'], {'pid': pid, 'pwif': -1}):
+        validIds.add(row['wif'])
+    choice = None
+    while choice not in validIds:
+        try:
+            choice = int(input('Enter the Workflow ID: '))
+        except ValueError:
+            print('    Project id must be an integer!')
+        if choice not in validIds:
+            print('    Invalid id. Enter a valid id')
+    return choice
 

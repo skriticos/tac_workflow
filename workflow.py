@@ -63,4 +63,16 @@ def ListRoot(db, pid):
     for wf in workflows:
         print('    {wif}: {name} - {title}'.format(**wf))
 
+def SelectRoot(db, pid):
+# ~~~~~~~~~~~~~~~~~~~~~~
+    workflowCount = db.getConditionalRowCount(
+            'tblWorkflow', {'ppid': pid, 'pwif': -1})
+    if not workflowCount:
+        print('This project has no workflows! Aporting select..')
+        return None
+    print()
+    print('Selecting a root-workflow..')
+    ListRoot(db, pid)
+    pid = prompt.PromptRootWorkflowId(db, pid)
+    return pid
 
