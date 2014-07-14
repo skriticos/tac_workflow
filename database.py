@@ -223,6 +223,11 @@ class DataBase():
                 dataQuery = ', '.join(newQuery),
                 whereQuery = ' AND '.join(condQuery))
         self.cursor.execute(query, tuple(newValues + condValues))
+        if tablename in ['tblProject', 'tblWorkflow']:
+            timestamp = int(time.time())
+            timequery = "UPDATE {} SET modified=? WHERE {}"
+            timequery = timequery.format(tablename, ' AND '.join(condQuery))
+            self.cursor.execute(timequery, tuple([timestamp] + condValues))
         self.connection.commit()
 
     def addProject(self, name, title, description):
