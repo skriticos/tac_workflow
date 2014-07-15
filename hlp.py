@@ -60,3 +60,14 @@ def WorkflowHelp():
     print('H:      show this help')
     print()
 
+def WorkflowEditHelp():
+# ~~~~~~~~~~~~~~~~~~~~~
+    print()
+    print('BACK:        back to workflow overview')
+    print('NAME:        change workflow name')
+    print('TITLE:       change workflow title')
+    print('DESCRIPTION: edit workflow description')
+    print('STATUS:      chage workflow status')
+    print('HELP:        show this help')
+    print()
+

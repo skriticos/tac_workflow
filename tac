@@ -143,7 +143,7 @@ def workflowEditMenu(db, wif, wfpath):
         if char == 'S':
             workflow.EditStatus(db, wif)
         if char == 'H':
-            pass # show workflow edit help
+            hlp.WorkflowEditHelp()
 
 mainMenu(setupDatabase())
 
