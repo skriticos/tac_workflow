@@ -135,13 +135,13 @@ def workflowEditMenu(db, wif, wfpath):
     while char != 'B':
         char = prompt.Prompt(menuitems.workflowEdit, wfpath)
         if char == 'N':
-            pass # edit workflow name
+            workflow.EditName(db, wif)
         if char == 'T':
-            pass # edit workflow title
+            workflow.EditTitle(db, wif)
         if char == 'D':
-            pass # edit workflow description
+            workflow.EditDescription(db, wif)
         if char == 'S':
-            pass # edit workflow status
+            workflow.EditStatus(db, wif)
         if char == 'H':
             pass # show workflow edit help
 

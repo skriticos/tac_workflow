@@ -91,3 +91,19 @@ def PromptRootWorkflowId(db, pid):
             print('    Invalid id. Enter a valid id')
     return choice
 
+def PromptWorkflowStatus(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    choices = ['Open', 'Active', 'Completed', 'Aborted']
+    validchoices = set(range(1, len(choices)+1))
+    for i, choice in enumerate(choices):
+        print('{}: {}'.format(i+1, choice))
+    choice = None
+    while choice not in validchoices:
+        try:
+            choice = int(input('Enter new workflow status: '))
+        except ValueError:
+            print('    Choice must be an integer!')
+        if choice not in validchoices:
+            print('    Invalid choice!')
+    return choices[choice-1]
+

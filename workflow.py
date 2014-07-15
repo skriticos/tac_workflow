@@ -50,6 +50,40 @@ def Create(db, pid):
     pid = db.addRootWorkflow(pid, name, title, description)
     return pid
 
+def EditName(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    wfname = db.getConditionalRow('tblWorkflow', ['name'], {'wif':wif})
+    wfname = wfname['name']
+    print('Editing workflow name..')
+    newname = readName(wfname)
+    db.updateRow('tblWorkflow', {'name': newname}, {'wif': wif})
+
+def EditTitle(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~
+    print('Editing workflow title..')
+    oldtitle = db.getConditionalRow('tblWorkflow', ['title'], {'wif': wif})
+    oldtitle = oldtitle['title']
+    print('Current title: ', oldtitle)
+    newtitle = input('Enter new title: ')
+    db.updateRow('tblWorkflow', {'title': newtitle}, {'wif': wif})
+
+def EditDescription(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('Editing workflow description..')
+    olddesc = db.getConditionalRow('tblWorkflow', ['description'], {'wif': wif})
+    olddesc = olddesc['description']
+    newdesc = util.vimEdit(olddesc)
+    db.updateRow('tblWorkflow', {'description': newdesc}, {'wif': wif})
+
+def EditStatus(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~~
+    print('Editing workflow status..')
+    oldstatus = db.getConditionalRow('tblWorkflow', ['status'], {'wif': wif})
+    oldstatus = oldstatus['status']
+    print('Current status:', oldstatus)
+    newstatus = prompt.PromptWorkflowStatus(db, wif)
+    db.updateRow('tblWorkflow', {'status': newstatus}, {'wif': wif})
+
 def ListRoot(db, pid):
 # ~~~~~~~~~~~~~~~~~~~~
     """
