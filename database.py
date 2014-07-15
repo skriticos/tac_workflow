@@ -186,12 +186,14 @@ class DataBase():
         """
             Like getConditionalRow, just for multiple rows
         """
-        query = "SELECT {} FROM {} WHERE {}=?"
-        query = query.format(
-                ', '.join(columns), tablename, list(condition.keys())[0])
-        records = self.cursor.execute(query, (list(condition.values())[0],))
-        records = records.fetchall()
-        result = []
+        ckeys, cvals, result = [], [], []
+        for key, value in condition.items():
+            ckeys.append('{}=?'.format(key))
+            cvals.append(value)
+        ckeys = ' AND '.join(ckeys)
+        query = "SELECT {} FROM {} WHERE {}".format(
+                    ', '.join(columns), tablename, ckeys)
+        records = self.cursor.execute(query, tuple(cvals)).fetchall()
         for record in records:
             recdir = {}
             for i, column in enumerate(columns):
