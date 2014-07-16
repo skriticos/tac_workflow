@@ -1,0 +1,67 @@
+--------------------------------------------------------------------------------
+=========
+main menu
+=========
+* create project                        [c]
+* delete project                        [d]
+i list projects                         [l]
+i list project tree                     [t]
+i help                                  [h]
+@ select project                        [u]
+@ quit                                  [q]
+    ============
+    project menu
+    ============
+    * create root-workflow              [c]
+    * delete root-workflow              [d]
+    i show project details              [i]
+    i list root workflows               [l]
+    i list workflow tree                [t]
+    i help                              [h]
+    @ select root-workflow              [u]
+    @ edit project details              [e]
+    @ back                              [b]
+    @ main menu                         [m]
+    @ quit                              [q]
+        =================
+        project edit menu
+        =================
+        * edit name                     [n]
+        * edit title                    [i]
+        * edit description              [r]
+        i show project details          [i]
+        @ back                          [b]
+        @ main menu                     [m]
+        @ quit                          [q]
+    =========================
+    workflow menu (recursive)
+    =========================
+    * create sub-workflow               [c]
+    * delete sub-workflow               [d]
+    i show workflow details             [i]
+    i list sub-workflows                [l]
+    i list sub-workflow tree            [t]
+    i help                              [h]
+    @ select sub-workflow               [u]
+    @ edit workflow details             [e]
+    @ back                              [b]
+    @ main menu                         [m]
+    @ quit                              [q]
+        ==================
+        workflow edit menu
+        ==================
+        * edit name                     [n]
+        * edit title                    [t]
+        * edit description              [r]
+        i show workflow details         [i]
+        @ back                          [b]
+        @ main menu                     [m]
+        @ quit                          [q]
+--------------------------------------------------------------------------------
+Symbols
+=======
+* change data
+i display data
+@ navigate structure
+--------------------------------------------------------------------------------
+
