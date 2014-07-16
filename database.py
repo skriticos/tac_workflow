@@ -273,3 +273,20 @@ class DataBase():
             })
         return self.cursor.lastrowid
 
+    def addSubWorkflow(self, wif, name, title, description):
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        timestamp = int(time.time())
+        ppid = self.getConditionalRow('tblWorkflow', ['ppid'], {'wif': wif})
+        ppid = ppid['ppid']
+        self.insert('tblWorkflow', {
+            'ppid': ppid,
+            'pwif': wif,
+            'name': name,
+            'title': title,
+            'description': description,
+            'status': 'Open',
+            'created': timestamp,
+            'modified': timestamp
+            })
+        return self.cursor.lastrowid
+

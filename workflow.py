@@ -32,23 +32,23 @@ def readName(currentName=''):
             print('    Max. 16 charaterss.')
     return name
 
-def Create(db, pid):
+def CreateRootWorkflow(db, pid):
 # ~~~~~~~~~~~~~~~~~~
-    """
-        Create a new workflow. Prompt the user for name and title, let the user
-        edit the description in an external editor and send the changes to the
-        database.
-
-        in: db - database instance
-        in (terminal): name, title, description - workflow properties
-        out: pid - workflow id in database
-    """
-    print('Creating new workflow..')
+    print('Creating new root workflow..')
     name = readName()
     title = input('Workflow title: ')
     description = util.vimEdit()
-    pid = db.addRootWorkflow(pid, name, title, description)
-    return pid
+    wif = db.addRootWorkflow(pid, name, title, description)
+    return wif
+
+def CreateSubWorkflow(db, wif):
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    print('Creating new sub-workflow..')
+    name = readName()
+    title = input('Workflow title: ')
+    description = util.vimEdit()
+    wif = db.addSubWorkflow(wif, name, title, description)
+    return wif
 
 def EditName(db, wif):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

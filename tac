@@ -80,7 +80,7 @@ def projectMenu(db, pid):
         if char == 'E':
             projectEditMenu(db, pid, projectName)
         if char == 'C':
-            workflow.Create(db, pid)
+            workflow.CreateRootWorkflow(db, pid)
         if char == 'H':
             hlp.ProjectHelp()
 
@@ -123,7 +123,8 @@ def workflowMenu(db, wif, parentPath):
         if char == 'E':
             workflowEditMenu(db, wif, wfpath)
         if char == 'C':
-            pass # create a new sub-workflow
+            wif = workflow.CreateSubWorkflow(db, wif)
+            workflowMenu(db, wif, wfpath)
         if char == 'D':
             pass # delete sub-workflow
         if char == 'H':
