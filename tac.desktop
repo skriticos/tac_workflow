@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Workflows
+Comment=Workflow Manager
+Exec=/usr/bin/konsole -e /home/seth/projects/tac_workflow/main.py
+Icon=tac
