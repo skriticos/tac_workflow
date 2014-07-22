@@ -1,109 +1,131 @@
 """
-    User input prompts in the navigation.
+    Interactive user input module
+
+    Collection of functions that read and validate user input. This is the only
+    module that deals with direct user input and input validation.
 """
 
-def draw(optlist):
-# ~~~~~~~~~~~~~~~~
-    """
-        Take a list of menu options, puts the first characters in between
-        brackets to indicate that these are the command keys for this option and
-        output menu to the console sandwiched in two horizontal lines.
+import subprocess
+import tempfile
+import re
 
-        in: ['foo', 'bar']
-        out (terminal):
-            ~~~~~~~~~~~~~~~~~~~
-            [F]OO ~ [B]AR
-            ~~~~~~~~~~~~~~~~~~~
+def PromptChar(options, path):
     """
-    print()
-    print(80*'~')
-    optlist2 = []
-    for opt in optlist:
-        o = opt.upper()
-        o = '[' + o[0] + ']' + o[1:]
-        optlist2.append(o)
-    print(' ~ '.join(optlist2))
-    print(80*'~')
+        Read a character option from user input
 
-def readinput(wfpath):
-# ~~~~~~~~~~~~~~~~~~~~
-    """
-        Take a path, draw it surrounded with barkets and read user input.
+        Loop until the user entered a character that was specified in the
+        options argument. Characters the user entered beyond the first one are
+        discarded. Return valid character.
 
-        in: '/foo/bar', user input (terminal)
-        out (terminal): '[/foo/bar]: '
-        out: (user input)
+        Example:
+            opt = prompt.PromptChar('abc', '/foo/bar')
     """
-    return input('[' + wfpath + ']: ')
-
-def Prompt(optlist, wfpath):
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    """
-        Takes an option list of strings and a path. Compiles a list of valid
-        options. Draws a menu and queries user input until valid.
-
-        in: ['foo', 'bar'], '/a/b/c'
-        out: [f|b]
-    """
-    optchars = []
-    for opt in optlist:
-        optchars.append(opt[0].upper())
-    char = None
-    while char not in optchars:
-        draw(optlist)
-        char = readinput(wfpath)[0].upper()
-        if char not in optchars:
-            print('Invalid input! Try again..')
-    return char
-
-def PromptProjectId(db):
-# ~~~~~~~~~~~~~~~~~~~~~~
-    """
-        Prompt the user to select a project id.
-    """
-    validIds = set()
-    for row in db.getAllRows('tblProject', ['pid']):
-        validIds.add(row['pid'])
     choice = None
-    while choice not in validIds:
-        try:
-            choice = int(input('Enter the Project ID: '))
-        except ValueError:
-            print('    Project id must be an integer!')
-        if choice not in validIds:
-            print('    Invalid id. Enter a valid id')
+    while choice not in list(options):
+        userin = input('[' + path + ']: ')
+        if len(userin) == 0:
+            print('error: empty user input, try again..')
+            continue
+        choice = userin[0]
+        if choice not in list(options):
+            print('error: invalid option, try again..')
     return choice
 
-def PromptRootWorkflowId(db, pid):
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    validIds = set()
-    for row in db.getConditionalRows(
-            'tblWorkflow',
-            ['wif'], {'ppid': pid, 'pwif': -1}):
-        validIds.add(row['wif'])
-    choice = None
-    while choice not in validIds:
-        try:
-            choice = int(input('Enter the Workflow ID: '))
-        except ValueError:
-            print('    Project id must be an integer!')
-        if choice not in validIds:
-            print('    Invalid id. Enter a valid id')
+def PromptInt(validnumbers, path):
+    """
+        Read number option from user input
+
+        Loop until user enters a valid number from a set specified in the
+        validnumbers argument. Valid number is returned.
+
+        Example:
+            opt = prompt.PromptInt((1, 3, 4, 5), '/foo/bar')
+    """
+    choice = 0
+    while choice not in validnumbers:
+        choice = input('[' + path + ']: ')
+        if not choice.isdigit():
+            print('error: only digits allowed, try again..')
+            continue
+        choice = int(choice)
+        if choice not in validnumbers:
+            print('error: choice not in valid numbers, try again..')
     return choice
 
-def PromptWorkflowStatus(db, wif):
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    choices = ['Open', 'Active', 'Completed', 'Aborted']
-    validchoices = set(range(1, len(choices)+1))
-    for i, choice in enumerate(choices):
-        print('{}: {}'.format(i+1, choice))
-    choice = None
-    while choice not in validchoices:
-        try:
-            choice = int(input('Enter new workflow status: '))
-        except ValueError:
-            print('    Choice must be an integer!')
-        if choice not in validchoices:
-            print('    Invalid choice!')
-    return choices[choice-1]
+identifierregex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
+def PromptName():
+    """
+        Read a project or workflow name from user input
+
+        Loop until the user enters a valid name that is defined by the
+        identifierregex pattern. Return valid name.
+
+        Example:
+            name = prompt.PromptName()
+    """
+    nameok = False
+    while not nameok:
+        name = input('name: ')
+        if identifierregex.match(name):
+            nameok = True
+        else:
+            print('error: invalid name pattern, try again..')
+    return name
+
+def PromptTitle():
+    """
+        Read project or workflow title from user input
+
+        Example:
+            title = prompt.PromptTitle()
+    """
+    title = input('title: ')
+    return title
+
+def _vimedit(content=''):
+    """
+        Open a temporary file in vim for the user to edit
+
+        Create a temporary file, write content into it, run a subprocess with
+        vim and the file and read back the changed content.
+
+        Example:
+            newdescription = _vimedit(olddescription)
+    """
+    tmpfp = tempfile.NamedTemporaryFile()
+    tmpfilename = tmpfp.name
+    if content:
+        tmpfp.write(content.encode('UTF-8'))
+        tmpfp.flush()
+    subprocess.call(['/usr/bin/vim', tmpfilename])
+    tmpfp.seek(0)
+    return tmpfp.read().decode('UTF-8')
+
+def PromptDescription(olddescription=''):
+    """
+        Let the user edit a project or workflow description
+
+        Example:
+            newdescription = prompt.PromptDescription(olddescription)
+    """
+    newdescription = _vimedit(olddescription)
+    return newdescription
+
+def PromptStatus():
+    """
+        Read a workflow status from interactive user input
+
+        Show a list of available status options, let the user select one and
+        return it.
+
+        Example:
+            status = prompt.PromptStatus()
+    """
+    validstatuses = ['Open', 'Active', 'Completed', 'Aborted']
+    validopts = set()
+    for x, status in enumerate(validstatuses):
+        print('    {}: {}'.format(x+1, status))
+        validopts.add(x+1)
+    choice = PromptInt(validopts, 'status')-1
+    return validstatuses[choice]
 

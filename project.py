@@ -1,138 +1,106 @@
 """
-    This module contains functions that are related to project editing.
+    Collection of project interaction function
+
+    Middle layer between menu and user input. The functions in this module act
+    as a controller between user input and the database. They output information
+    from the database and apply changes to the data that is read from prompt
+    functions. There is no direct user input in this module.
 """
-
-import re
+import time
 import textwrap
-import util
 import prompt
+import workflow
 
-identRegex = re.compile('^[_a-zA-Z][_a-zA-Z0-9]{0,16}$')
+def ListProjects(db):
+    print('listing projects..')
+    projectCount = db.getRowCount('tblProject')
+    if projectCount == 0:
+        print('no projects in database')
+        return
+    print('    PID: NAME - TITLE')
+    print('    -----------------')
+    projectRows = db.getAllRows('tblProject', ['pid', 'name', 'title'])
+    for row in projectRows:
+        print('    {pid}: {name} - {title}'.format(**row))
 
-def readName(currentName=''):
-# ~~~~~~~~~~~~~~~~~~~~~~~
-    """
-        Read project name and validate it
-
-        If currentName is provided, it is printed. Then it reads the project
-        name from the user. Checks the project name and loops until it's valid.
-    """
-    if currentName:
-        print('Current name:', currentName)
-    nameOk = False
-    while not nameOk:
-        name = input('Project new name: ')
-        if identRegex.match(name):
-            nameOk = True
-        else:
-            print('    Invalid name!')
-            print('    Only letters, numbers and underscores are allowed.')
-            print('    First character must not be a number.')
-            print('    Max. 16 charaterss.')
-    return name
-
-def Create(db):
-# ~~~~~~~~~~~~~
-    """
-        Create a new project. Prompt the user for name and title, let the user
-        edit the description in an external editor and send the changes to the
-        database.
-
-        in: db - database instance
-        in (terminal): name, title, description - project properties
-        out: pid - project id in database
-    """
-    print('Creating new project..')
-    name = readName()
-    title = input('Project title: ')
-    description = util.vimEdit()
-    pid = db.addProject(name, title, description)
+def CreateProject(db):
+    print('creating a new project..')
+    name = prompt.PromptName()
+    title = prompt.PromptTitle()
+    description = prompt.PromptDescription()
+    timestamp = int(time.time())
+    pid = db.insert('tblProject',
+            {'name': name,
+             'title': title,
+             'description': description,
+             'created': timestamp,
+             'modified': timestamp})
     return pid
 
-def EditName(db, pid, projectName):
-# ~~~~~~~~~~~~~~~~~~~~
-    """
-        Edit project name
-    """
-    print('Editing project name..')
-    newname = readName(projectName)
+def DeleteProject(db):
+    print('select project id to delete..')
+    ListProjects(db)
+    validids = set()
+    for row in db.getAllRows('tblProject', ['pid']):
+        validids.add(row['pid'])
+    pid = prompt.PromptInt(validids, 'pid')
+    pwfs = db.getConditionalRows('tblWorkflow', ['wif'], {'ppid': pid})
+    for wf in pwfs:
+        db.delete('tblProject', {'wif': wf['wif']})
+    db.delete('tblProject', {'pid': pid})
+
+def SelectProject(db):
+    print('select a project..')
+    if db.getRowCount('tblProject') == 0:
+        print('error: no projects existent! Aborting select..')
+        return None
+    ListProjects(db)
+    validids = set()
+    for row in db.getAllRows('tblProject', ['pid']):
+        validids.add(row['pid'])
+    pid = prompt.PromptInt(validids, 'pid')
+    return pid
+
+def ProjectInfo(db, pid):
+    print('listing project information..')
+    record = db.getConditionalRow('tblProject',
+            ['name', 'title', 'created', 'modified', 'description'],
+            {'pid': pid})
+    print('Name:    ', record['name'])
+    print('Title:   ', record['title'])
+    print('Created: ', time.ctime(record['created']))
+    print('Modified:', time.ctime(record['modified']))
+    print('Description:')
+    print(textwrap.indent(record['description'], 4*' '))
+
+def ProjectTree(db):
+    projects = db.getAllRows('tblProject', ['pid', 'name', 'title'])
+    for pro in projects:
+        print('{pid}: {name} - {title}'.format(**pro))
+        rootwfs = db.getConditionalRows(
+                'tblWorkflow', ['wif', 'name', 'title', 'status'],
+                {'ppid':pro['pid'], 'pwif':-1})
+        for wf in rootwfs:
+            workflow.WorkflowTree(db, wf['wif'], '   ')
+
+def EditProjectName(db, pid):
+    print('editing project name..')
+    oldname = db.getConditionalRow('tblProject', ['name'], {'pid': pid})
+    print('    current name: {name}'.format(**oldname))
+    newname = prompt.PromptName()
     db.updateRow('tblProject', {'name': newname}, {'pid': pid})
 
-def EditTitle(db, pid):
-# ~~~~~~~~~~~~~~~~~~~~~
-    """
-        Edit project title
-    """
-    print('Editing project title..')
+def EditProjectTitle(db, pid):
+    print('editing project title..')
     oldtitle = db.getConditionalRow('tblProject', ['title'], {'pid': pid})
-    oldtitle = oldtitle['title']
-    print('Current title: ', oldtitle)
-    newtitle = input('Enter new title: ')
+    print('    current title: {title}'.format(**oldtitle))
+    newtitle = prompt.PromptTitle()
     db.updateRow('tblProject', {'title': newtitle}, {'pid': pid})
 
-def EditDescription(db, pid):
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    """
-        Edit project description
-    """
-    print('Editing project description..')
-    olddescription = db.getConditionalRow(
-            'tblProject', ['description'], {'pid': pid})
-    olddescription = olddescription['description']
-    newdescription = util.vimEdit(olddescription)
-    db.updateRow('tblProject', {'description': newdescription}, {'pid': pid})
-
-def List(db):
-# ~~~~~~~~~~~
-    """
-        List existing project names and titles.
-    """
-    print()
-    print('List of Projects:')
-    for project in db.getAllRows('tblProject', ['pid', 'name', 'title']):
-        print('    {}: {} - {}'.format(
-            project['pid'], project['name'], project['title']))
-
-def Select(db):
-# ~~~~~~~~~~~~~
-    """
-        List all projects and ask the user to select one (by id).
-    """
-    if db.getRowCount('tblProject') == 0:
-        print('No projects existent! Aborting select..')
-        return None
-    print()
-    print('Selecting a project..')
-    List(db)
-    pid = prompt.PromptProjectId(db)
-    return pid
-
-def Delete(db):
-# ~~~~~~~~~~~~~
-    """
-        Delete a project
-
-        Show the user a list of projects, prompt for an ID and delete it.
-    """
-    if db.getRowCount('tblProject') == 0:
-        print('No projects existent! Aborting delete..')
-        return None
-    print()
-    print('Deleting a project..')
-    List(db)
-    pid = prompt.PromptProjectId(db)
-    db.deleteProject(pid)
-
-def Info(db, pid):
-# ~~~~~~~~~~~~~~~~
-    """
-        Print project name, title and description.
-    """
-    record = db.getConditionalRow('tblProject',
-            ['name', 'title', 'description'], {'pid': pid})
-    print()
-    print('Project Name:', record['name'])
-    print('Project Title:', record['title'])
-    print('Project Description:')
-    print(textwrap.indent(record['description'], 4*' '))
+def EditProjectDescription(db, pid):
+    print('editing project description..')
+    cdesc = db.getConditionalRow('tblProject', ['description'], {'pid': pid})
+    cdesc = cdesc['description']
+    ndesc = prompt.PromptDescription(cdesc)
+    db.updateRow('tblProject', {'description': ndesc}, {'pid': pid})
 

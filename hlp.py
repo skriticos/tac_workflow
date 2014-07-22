@@ -2,72 +2,69 @@
     Functions to output help in the various navigation menus.
 """
 
-def RootHelp():
-# ~~~~~~~~~~~~~
-    """
-        Show help for root menu.
-    """
-    print()
-    print('QUIT:   quit application')
-    print('SELECT: select a project')
-    print('LIST:   list all projects')
-    print('TREE:   list all project trees (show all workflows)')
-    print('CREATE: create a new project')
-    print('HELP:   show this help')
-    print()
+def MainMenuHelp():
+    print('main menu help..')
+    print('[*]: change data, [i]: display data, [@]: navigate')
+    print('c - [*] create project')
+    print('d - [*] delete project')
+    print('l - [i] list projects')
+    print('t - [i] list project tree')
+    print('h - [i] show this help')
+    print('u - [@] select project')
+    print('q - [@] quit application')
 
 def ProjectHelp():
-# ~~~~~~~~~~~~~~~~
-    """
-        Show help for project menu.
-    """
-    print()
-    print('BACK:   back to root menu')
-    print('SELECT: select workflow')
-    print('INFO:   show project info')
-    print('LIST:   list workflows')
-    print('TREE:   list workflows recursively')
-    print('EDIT:   edit project name, title or description')
-    print('CREATE: create a new root-workflow')
-    print('HELP:   show this help')
-    print()
-
-def ProjectEditHelp():
-# ~~~~~~~~~~~~~~~~~~~~
-    """
-        Show help for edit project menu.
-    """
-    print()
-    print('BACK:        back to project menu')
-    print('NAME:        edit project name')
-    print('TITLE:       edit project title')
-    print('DESCRIPTION: edit project description')
-    print('HELP:        show this help')
-    print()
+    print('project menu help..')
+    print('[*]: change data, [i]: display data, [@]: navigate')
+    print('c - [*] create root workflow')
+    print('d - [*] delete root workflow')
+    print('i - [i] show project information')
+    print('l - [i] list root workflows')
+    print('t - [i] list root workflow tree')
+    print('h - [i] show this help')
+    print('u - [@] select root workflow')
+    print('e - [@] project edit menu')
+    print('b - [@] back to main menu')
+    print('m - [@] back to main menu')
+    print('q - [@] quit application')
 
 def WorkflowHelp():
-# ~~~~~~~~~~~~~~~~~
-    print()
-    print('B:      one level up')
-    print('Q:      quit application')
-    print('S:      select a sub-workflow')
-    print('INFO:   show workflow details')
-    print('LIST:   list sub-workflows')
-    print('TREE:   list sub-workflows recursively')
-    print('EDIT:   edit workflow')
-    print('CREATE: create a sub-workflow')
-    print('D:      delete sub-workflow')
-    print('H:      show this help')
-    print()
+    print('workflow menu help..')
+    print('[*]: change data, [i]: display data, [@]: navigate')
+    print('c - [*] create sub workflow')
+    print('d - [*] delete sub workflow')
+    print('i - [i] show workflow information')
+    print('l - [i] list sub workflows')
+    print('t - [i] list sub workflow tree')
+    print('h - [i] show this help')
+    print('u - [@] select sub workflow')
+    print('e - [@] wokflow edit menu')
+    print('b - [@] back to parent workflow or project')
+    print('m - [@] back to main menu')
+    print('q - [@] quit application')
+
+def ProjectEditHelp():
+    print('project edit menu help..')
+    print('[*]: change data, [i]: display data, [@]: navigate')
+    print('n - [*] change name')
+    print('t - [*] change title')
+    print('r - [*] edit description')
+    print('i - [i] show project information')
+    print('h - [i] show this help')
+    print('b - [@] back to project menu')
+    print('m - [@] back to main menu')
+    print('q - [@] quit application')
 
 def WorkflowEditHelp():
-# ~~~~~~~~~~~~~~~~~~~~~
-    print()
-    print('BACK:        back to workflow overview')
-    print('NAME:        change workflow name')
-    print('TITLE:       change workflow title')
-    print('DESCRIPTION: edit workflow description')
-    print('STATUS:      chage workflow status')
-    print('HELP:        show this help')
-    print()
+    print('workflow edit menu help..')
+    print('[*]: change data, [i]: display data, [@]: navigate')
+    print('n - [*] change name')
+    print('t - [*] change title')
+    print('r - [*] edit description')
+    print('s - [*] change status')
+    print('i - [i] show workflow information')
+    print('h - [i] show this help')
+    print('b - [@] back to workflow menu')
+    print('m - [@] back to main menu')
+    print('q - [@] quit application')
 

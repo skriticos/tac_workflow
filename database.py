@@ -39,7 +39,7 @@ tblWorkflowSchema = [
         ('wif', 'INTEGER PRIMARY KEY'),
         ('ppid', 'INTEGER'),
         ('pwif', 'INTEGER'),
-        ('name', 'TEXT UNIQUE'),
+        ('name', 'TEXT'),
         ('title', 'TEXT'),
         ('description', 'TEXT'),
         ('status', 'TEXT'),
@@ -51,10 +51,8 @@ tblWorfklowCols = [
         'created', 'modified' ]
 
 class DataBase():
-# ---------------
 
     def __init__(self, path):
-    # ~~~~~~~~~~~~~~~~~~~~~~~
         """
             Establish a connection to database file. The path argument is the
             full database path. If the path or database file do not exist, they
@@ -85,7 +83,6 @@ class DataBase():
                 raise Exception('Trying to open database with old schema!')
 
     def createTable(self, tablename, schema):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             We define table schemas with a list that contains two member tuples
             for column tablename. See the declarations at the beginning of this file.
@@ -102,7 +99,6 @@ class DataBase():
         self.connection.commit()
 
     def insert(self, tablename, data):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Generic insert method for database tables.
 
@@ -120,9 +116,10 @@ class DataBase():
                 questionmarks=', '.join(len(values)*'?'))
         self.cursor.execute(query, tuple(values))
         self.connection.commit()
+        if tablename in ['tblProject', 'tblWorkflow']:
+            return self.cursor.lastrowid
 
     def getRowCount(self, tablename):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Get the number of rows in a specific table.
         """
@@ -130,7 +127,6 @@ class DataBase():
         return self.cursor.execute(query).fetchone()[0]
 
     def getConditionalRowCount(self, tablename, conditions):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         query = "SELECT Count(*) FROM {} WHERE {}"
         condpart = []
         condval = []
@@ -143,7 +139,6 @@ class DataBase():
         return count
 
     def getAllRows(self, tablename, columns):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Generic select method. Return a list of columns for all records.
 
@@ -161,7 +156,6 @@ class DataBase():
         return out
 
     def getConditionalRow(self, tablename, columns, condition):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Simply said, this is a generalization of
             "SELECT {cols} FROM {tbl} WHERE col=val"
@@ -182,7 +176,6 @@ class DataBase():
         return out
 
     def getConditionalRows(self, tablename, columns, condition):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Like getConditionalRow, just for multiple rows
         """
@@ -202,7 +195,6 @@ class DataBase():
         return result
 
     def updateRow(self, tablename, data, conditions):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         """
             Update a single record in a database table
 
@@ -232,61 +224,18 @@ class DataBase():
             self.cursor.execute(timequery, tuple([timestamp] + condValues))
         self.connection.commit()
 
-    def addProject(self, name, title, description):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        """
-            Insert a new project entry into the tblProject table.
-        """
-        timestamp = int(time.time())
-        self.insert('tblProject', {
-            'name': name,
-            'title': title,
-            'description': description,
-            'created': timestamp,
-            'modified': timestamp
-            })
-        return self.cursor.lastrowid
-
-    def deleteProject(self, pid):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        query = 'DELETE FROM tblProject WHERE pid=?'
-        self.cursor.execute(query, (pid,))
+    def delete(self, tablename, conditions):
+        if len(conditions) == 0:
+            print('error: trying to delete row with empty condition')
+            return
+        query = "DELETE FROM {tablename} WHERE {conditions}"
+        condkeys = []
+        condvals = []
+        for key, value in conditions.items():
+            condkeys.append('{}=?'.format(key))
+            condvals.append(value)
+        query = query.format(tablename=tablename,
+                             conditions=' AND '.join(condkeys))
+        self.cursor.execute(query, tuple(condvals))
         self.connection.commit()
-
-    def addRootWorkflow(self, pid, name, title, description):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        """
-            Insert a new root workflow into the tblWorkflow table
-
-            Parent workflow is -1
-        """
-        timestamp = int(time.time())
-        self.insert('tblWorkflow', {
-            'ppid': pid,
-            'pwif': -1,
-            'name': name,
-            'title': title,
-            'description': description,
-            'status': 'Open',
-            'created': timestamp,
-            'modified': timestamp
-            })
-        return self.cursor.lastrowid
-
-    def addSubWorkflow(self, wif, name, title, description):
-    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        timestamp = int(time.time())
-        ppid = self.getConditionalRow('tblWorkflow', ['ppid'], {'wif': wif})
-        ppid = ppid['ppid']
-        self.insert('tblWorkflow', {
-            'ppid': ppid,
-            'pwif': wif,
-            'name': name,
-            'title': title,
-            'description': description,
-            'status': 'Open',
-            'created': timestamp,
-            'modified': timestamp
-            })
-        return self.cursor.lastrowid
 
