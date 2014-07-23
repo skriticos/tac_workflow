@@ -46,7 +46,7 @@ def DeleteWorkflowRecursively(db, wif):
     subwfs = db.getConditionalRows('tblWorkflow', ['wif'], {'pwif': wif})
     for wf in subwfs:
         DeleteWorkflowRecursively(db, wf['wif'])
-        db.delete('tblWorkflow', {'wif': wif})
+    db.delete('tblWorkflow', {'wif': wif})
 
 def DeleteRootWorkflow(db, pid):
     print('select root workflow id to delete..')
